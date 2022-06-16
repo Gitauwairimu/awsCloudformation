@@ -82,3 +82,16 @@ Resources:
             Tags: 
                 - Key: Name 
                   Value: !Sub ${ProjectName} Private Subnet (AZ2)
+        
+    InternetGateway:
+        Type: AWS::EC2::InternetGateway
+        Properties:
+            Tags:
+                - Key: Name
+                  Value: !Ref ProjectName
+            
+    InternetGatewayAttachment:
+        Type: AWS::EC2::VPCGatewayAttachment
+        Properties:
+            InternetGatewayId: !Ref InternetGateway
+            VpcId: !Ref UdagramVPC
