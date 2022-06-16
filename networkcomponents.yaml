@@ -1,16 +1,36 @@
 Parameters:
     ProjectName:
-        Description: An environment name that will be prefixed to resource names
+        Description: Projectwide resource name
         Type: String
 
     VpcCIDR: 
-        Description: Please enter the IP range (CIDR notation) for this VPC
+        Description: VPC IP range in CIDR notation
         Type: String
         Default: 10.0.0.0/16
+      
+    PublicSubnet1CIDR:
+        Description: First Availability Zone IP range in CIDR notation for the public subnet
+        Type: String
+        Default: 10.0.0.0/24
+
+    PublicSubnet2CIDR:
+        Description: Second Availability ZoneIP range  in CIDR notation for the public subnet
+        Type: String
+        Default: 10.0.1.0/24
+
+    PrivateSubnet1CIDR:
+        Description: First Availability Zone IP range in CIDR notation for the private subnet
+        Type: String
+        Default: 10.0.2.0/24
+
+    PrivateSubnet2CIDR:
+        Description: Second Availability Zone IP range in CIDR notation for the private subnet
+        Type: String
+        Default: 10.0.3.0/24
 
 
 Resources:
-    VPC: 
+    UdagramVPC: 
         Type: AWS::EC2::VPC
         Properties:
             CidrBlock: !Ref VpcCIDR
@@ -18,3 +38,47 @@ Resources:
             Tags: 
                 - Key: Name 
                   Value: !Ref ProjectName
+
+    PublicSubnet1: 
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref UdagramVPC
+            AvailabilityZone: !Select [ 0, !GetAZs '' ]
+            CidrBlock: !Ref PublicSubnet1CIDR
+            MapPublicIpOnLaunch: true
+            Tags: 
+                - Key: Name 
+                  Value: !Sub ${ProjectName} Public Subnet (AZ1)
+
+    PublicSubnet2: 
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref UdagramVPC
+            AvailabilityZone: !Select [ 1, !GetAZs '' ]
+            CidrBlock: !Ref PublicSubnet2CIDR
+            MapPublicIpOnLaunch: true
+            Tags: 
+                - Key: Name 
+                  Value: !Sub ${ProjectName} Public Subnet (AZ2)
+
+    PrivateSubnet1: 
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref UdagramVPC
+            AvailabilityZone: !Select [ 0, !GetAZs '' ]
+            CidrBlock: !Ref PrivateSubnet1CIDR
+            MapPublicIpOnLaunch: false
+            Tags: 
+                - Key: Name 
+                  Value: !Sub ${ProjectName} Private Subnet (AZ1)
+
+    PrivateSubnet2: 
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref UdagramVPC
+            AvailabilityZone: !Select [ 1, !GetAZs '' ]
+            CidrBlock: !Ref PrivateSubnet2CIDR
+            MapPublicIpOnLaunch: false
+            Tags: 
+                - Key: Name 
+                  Value: !Sub ${ProjectName} Private Subnet (AZ2)
