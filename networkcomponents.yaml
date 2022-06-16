@@ -95,3 +95,15 @@ Resources:
         Properties:
             InternetGatewayId: !Ref InternetGateway
             VpcId: !Ref UdagramVPC
+
+    EIPNatGateway1:
+        Type: AWS::EC2::EIP
+        DependsOn: InternetGatewayAttachment
+        Properties: 
+            Domain: vpc
+
+    EIPNatGateway2:
+        Type: AWS::EC2::EIP
+        DependsOn: InternetGatewayAttachment
+        Properties:
+            Domain: vpc
