@@ -54,4 +54,23 @@ Resources:
         ToPort: 80
         CidrIp: 0.0.0.0/0
 
-  
+  UdagramLaunchConfig: 
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId: !Ref LatestAmiId
+      SecurityGroups: 
+        - !Ref WebServerSg
+      InstanceType: 
+        !Ref InstanceType
+      BlockDeviceMappings: 
+        - DeviceName: /dev/sda1
+          Ebs: 
+            VolumeSize: '10'
+            VolumeType: gp3
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          sudo apt-get update -y
+          sudo apt-get install apache2 -y
+          sudo systemctl start apache2.service
+
