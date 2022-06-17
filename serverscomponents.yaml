@@ -134,3 +134,11 @@ Resources:
           Values: [/]
         ListenerArn: !Ref 'Listener'
         Priority: 1
+
+Outputs: 
+
+    LB: 
+        Description: A reference to the created LoadBalancer
+        Value: !Ref LB
+        Export:
+          Name: !Sub ${ProjectName}-LbID
